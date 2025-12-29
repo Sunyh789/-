@@ -1,0 +1,3 @@
+﻿  FileName.cpp
+成绩管理\x64\Debug\FileName.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
+  成绩管理.vcxproj -> D:\桌面\成绩管理\x64\Debug\成绩管理.exe

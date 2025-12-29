@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩管理系统</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 登录/注册区域 -->
+        <div id="login-section" class="section active">
+            <div class="header">
+                <h1><i class="fas fa-graduation-cap"></i> 成绩管理系统</h1>
+                <p>欢迎使用学生成绩管理平台</p>
+            </div>
+
+            <div class="form-container">
+                <div class="tabs">
+                    <button type="button" class="tab-btn active" onclick="switchTab('login')">登录</button>
+                    <button type="button" class="tab-btn" onclick="switchTab('register')">注册</button>
+                </div>
+
+                <!-- 登录表单 -->
+                <div id="login-form" class="form-content active">
+                    <div class="form-group">
+                        <label for="login-id"><i class="fas fa-user"></i> 用户名（学号）</label>
+                        <input type="text" id="login-id" placeholder="请输入用户名（数字学号）">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password"><i class="fas fa-lock"></i> 密码</label>
+                        <input type="password" id="login-password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-identity"><i class="fas fa-id-card"></i> 身份</label>
+                        <select id="login-identity">
+                            <option value="学生">学生</option>
+                            <option value="教师">教师</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="login()">登录系统</button>
+                </div>
+
+                <!-- 注册表单 -->
+                <div id="register-form" class="form-content">
+                    <div class="form-group">
+                        <label for="reg-id"><i class="fas fa-user-plus"></i> 用户名（学号）</label>
+                        <input type="text" id="reg-id" placeholder="请输入用户名（数字学号）">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password"><i class="fas fa-key"></i> 密码</label>
+                        <input type="password" id="reg-password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-identity"><i class="fas fa-user-tag"></i> 身份</label>
+                        <select id="reg-identity">
+                            <option value="学生">学生</option>
+                            <option value="教师">教师</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="register()">注册账号</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2023 成绩管理系统 | 支持教师和学生两种身份</p>
+            </div>
+        </div>
+
+        <!-- 教师端界面 -->
+        <div id="teacher-section" class="section">
+            <div class="header">
+                <h1><i class="fas fa-chalkboard-teacher"></i> 教师管理端</h1>
+                <div class="user-info">
+                    <span id="teacher-username"></span>
+                    <button class="btn btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> 退出</button>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="sidebar">
+                    <button class="menu-btn active" data-panel="add" onclick="showTeacherPanel('add', this)">
+                        <i class="fas fa-user-plus"></i> 添加学生
+                    </button>
+                    <button class="menu-btn" data-panel="delete" onclick="showTeacherPanel('delete', this)">
+                        <i class="fas fa-user-minus"></i> 删除学生
+                    </button>
+                    <button class="menu-btn" data-panel="modify" onclick="showTeacherPanel('modify', this)">
+                        <i class="fas fa-edit"></i> 修改成绩
+                    </button>
+                    <button class="menu-btn" data-panel="query" onclick="showTeacherPanel('query', this)">
+                        <i class="fas fa-search"></i> 查询学生
+                    </button>
+                    <button class="menu-btn" data-panel="all" onclick="showTeacherPanel('all', this)">
+                        <i class="fas fa-list"></i> 所有学生
+                    </button>
+                    <button class="menu-btn btn-save" data-panel="save" onclick="saveData()">
+                        <i class="fas fa-save"></i> 保存数据
+                    </button>
+                </div>
+
+                <div class="content">
+                    <!-- 添加学生面板 -->
+                    <div id="add-panel" class="panel active">
+                        <h2><i class="fas fa-user-plus"></i> 添加学生信息</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>学号</label>
+                                <input type="number" id="add-id" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>姓名</label>
+                                <input type="text" id="add-name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>年龄</label>
+                                <input type="number" id="add-age" class="form-control" min="1" max="150">
+                            </div>
+                            <div class="form-group">
+                                <label>年级</label>
+                                <input type="text" id="add-grade" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>专业</label>
+                                <input type="text" id="add-profession" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>数学成绩</label>
+                                <input type="number" id="add-math" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>英语成绩</label>
+                                <input type="number" id="add-english" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>程序设计</label>
+                                <input type="number" id="add-programming" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="addStudent()">添加学生</button>
+                    </div>
+
+                    <!-- 删除学生面板 -->
+                    <div id="delete-panel" class="panel">
+                        <h2><i class="fas fa-user-minus"></i> 删除学生信息</h2>
+                        <div class="form-group">
+                            <label>输入学号删除学生</label>
+                            <input type="number" id="delete-id" class="form-control" placeholder="请输入要删除的学生学号">
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteStudent()">删除学生</button>
+                    </div>
+
+                    <!-- 修改成绩面板 -->
+                    <div id="modify-panel" class="panel">
+                        <h2><i class="fas fa-edit"></i> 修改学生成绩</h2>
+                        <div class="form-group">
+                            <label>学生学号</label>
+                            <input type="number" id="modify-id" class="form-control" placeholder="请输入要修改的学生学号">
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>数学成绩</label>
+                                <input type="number" id="modify-math" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>英语成绩</label>
+                                <input type="number" id="modify-english" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>程序设计</label>
+                                <input type="number" id="modify-programming" class="form-control" min="0" max="100" step="0.1">
+                            </div>
+                        </div>
+                        <button class="btn btn-warning" onclick="modifyStudent()">修改成绩</button>
+                    </div>
+
+                    <!-- 查询学生面板 -->
+                    <div id="query-panel" class="panel">
+                        <h2><i class="fas fa-search"></i> 查询学生信息</h2>
+                        <div class="form-group">
+                            <label>查询方式</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="query-type" value="id" checked> 按学号查询
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="query-type" value="name"> 按姓名查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="query-value" class="form-control" placeholder="请输入查询值">
+                        </div>
+                        <button class="btn btn-info" onclick="queryStudent()">查询学生</button>
+
+                        <div id="query-result" class="result-container">
+                            <!-- 查询结果将显示在这里 -->
+                        </div>
+                    </div>
+
+                    <!-- 所有学生面板 -->
+                    <div id="all-panel" class="panel">
+                        <h2><i class="fas fa-list"></i> 所有学生信息</h2>
+                        <div class="table-container">
+                            <table id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>学号</th>
+                                        <th>姓名</th>
+                                        <th>年龄</th>
+                                        <th>年级</th>
+                                        <th>专业</th>
+                                        <th>数学</th>
+                                        <th>英语</th>
+                                        <th>程序设计</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-tbody">
+                                    <!-- 学生数据将动态加载到这里 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 学生端界面 -->
+        <div id="student-section" class="section">
+            <div class="header">
+                <h1><i class="fas fa-user-graduate"></i> 学生端</h1>
+                <div class="user-info">
+                    <span id="student-username"></span>
+                    <button class="btn btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> 退出</button>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="sidebar">
+                    <button class="menu-btn active" data-panel="query" onclick="showStudentPanel('query', this)">
+                        <i class="fas fa-search"></i> 查询信息
+                    </button>
+                    <button class="menu-btn" data-panel="myinfo" onclick="showStudentPanel('myinfo', this)">
+                        <i class="fas fa-user"></i> 我的信息
+                    </button>
+                    <button class="menu-btn btn-save" data-panel="save" onclick="saveData()">
+                        <i class="fas fa-save"></i> 保存数据
+                    </button>
+                </div>
+
+                <div class="content">
+                    <!-- 查询面板 -->
+                    <div id="student-query-panel" class="panel active">
+                        <h2><i class="fas fa-search"></i> 查询学生信息</h2>
+                        <div class="form-group">
+                            <label>查询方式</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="student-query-type" value="id" checked> 按学号查询
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="student-query-type" value="name"> 按姓名查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="student-query-value" class="form-control" placeholder="请输入查询值">
+                        </div>
+                        <button class="btn btn-info" onclick="studentQuery()">查询学生</button>
+
+                        <div id="student-query-result" class="result-container">
+                            <!-- 查询结果将显示在这里 -->
+                        </div>
+                    </div>
+
+                    <!-- 我的信息面板 -->
+                    <div id="myinfo-panel" class="panel">
+                        <h2><i class="fas fa-user"></i> 我的信息</h2>
+                        <div id="my-info-container" class="info-card">
+                            <!-- 当前登录学生的信息将显示在这里 -->
+                            <p class="loading">正在加载个人信息...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息提示框 -->
+    <div id="message-box" class="message-box">
+        <div class="message-content">
+            <span id="message-text"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
